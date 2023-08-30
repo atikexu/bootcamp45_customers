@@ -1,0 +1,518 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: 'http://localhost:8083'
+    description: Generated server url
+paths:
+  /person:
+    get:
+      tags:
+        - person-controller
+      operationId: getAll
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+    put:
+      tags:
+        - person-controller
+      operationId: updatePerson
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+    post:
+      tags:
+        - person-controller
+      operationId: createPerson
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+  /company:
+    get:
+      tags:
+        - company-controller
+      operationId: getAll_1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+    put:
+      tags:
+        - company-controller
+      operationId: updateCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CompanyResponseDto'
+    post:
+      tags:
+        - company-controller
+      operationId: createCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CompanyResponseDto'
+  '/person/{personId}':
+    get:
+      tags:
+        - person-controller
+      operationId: getPersonById
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+    delete:
+      tags:
+        - person-controller
+      operationId: deletePerson
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+  '/consult/person/{customerId}':
+    get:
+      tags:
+        - consult-controller
+      operationId: productXCustomerIdPerson
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Products'
+  '/consult/movementcreditcard/{id}':
+    get:
+      tags:
+        - consult-controller
+      operationId: movementXCreditCardId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Movements'
+  '/consult/movementcredit/{id}':
+    get:
+      tags:
+        - consult-controller
+      operationId: movementXCreditId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Movements'
+  '/consult/movementaccount/{id}':
+    get:
+      tags:
+        - consult-controller
+      operationId: movementXAccountId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Movements'
+  '/consult/company/{customerId}':
+    get:
+      tags:
+        - consult-controller
+      operationId: productXCustomerIdCompany
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Products'
+  '/company/{companyId}':
+    get:
+      tags:
+        - company-controller
+      operationId: getCompanyById
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Company'
+    delete:
+      tags:
+        - company-controller
+      operationId: deleteCompany
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+components:
+  schemas:
+    PersonRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastName:
+          type: string
+        dni:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        typeCustomer:
+          type: string
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastName:
+          type: string
+        dni:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        typeCustomer:
+          type: string
+    AuthorizedDto:
+      type: object
+      properties:
+        name:
+          type: string
+        lastName:
+          type: string
+        dni:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+    CompanyRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+        businessName:
+          type: string
+        ruc:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        headlines:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizedDto'
+        signatories:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizedDto'
+        typeCustomer:
+          type: string
+    Company:
+      type: object
+      properties:
+        id:
+          type: string
+        businessName:
+          type: string
+        ruc:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        headlines:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizedDto'
+        signatories:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizedDto'
+        typeCustomer:
+          type: string
+    CompanyResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+        company:
+          $ref: '#/components/schemas/Company'
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        typeAccount:
+          type: integer
+          format: int32
+        descripTypeAccount:
+          type: string
+        amount:
+          type: number
+          format: double
+        maintenance:
+          type: number
+          format: double
+        transaction:
+          type: integer
+          format: int32
+        operationDay:
+          type: integer
+          format: int32
+        dateAccount:
+          type: string
+          format: date-time
+        typeCustomer:
+          type: string
+        numberAccount:
+          type: string
+    Credit:
+      type: object
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        typeAccount:
+          type: integer
+          format: int32
+        descripTypeAccount:
+          type: string
+        creditAmount:
+          type: number
+          format: double
+        existingAmount:
+          type: number
+          format: double
+        creditDate:
+          type: string
+          format: date-time
+        typeCustomer:
+          type: string
+        amount:
+          type: number
+          format: double
+    CreditCard:
+      type: object
+      properties:
+        id:
+          type: string
+        customerId:
+          type: string
+        typeAccount:
+          type: integer
+          format: int32
+        descripTypeAccount:
+          type: string
+        creditAmount:
+          type: number
+          format: double
+        existingAmount:
+          type: number
+          format: double
+        creditDate:
+          type: string
+          format: date-time
+        numberCard:
+          type: string
+        typeCustomer:
+          type: string
+        amount:
+          type: number
+          format: double
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+        document:
+          type: string
+        nameCustomer:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        typeCustomer:
+          type: string
+    Products:
+      type: object
+      properties:
+        customer:
+          $ref: '#/components/schemas/Customer'
+        account:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        credit:
+          type: array
+          items:
+            $ref: '#/components/schemas/Credit'
+        creditCard:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditCard'
+    Movements:
+      type: object
+      properties:
+        customer:
+          $ref: '#/components/schemas/Customer'
+        transaction:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        productType:
+          type: string
+        productId:
+          type: string
+        customerId:
+          type: string
+        transactionType:
+          type: string
+        amount:
+          type: number
+          format: double
+        transactionDate:
+          type: string
+          format: date-time
+        customerType:
+          type: string
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
