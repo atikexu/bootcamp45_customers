@@ -1,8 +1,11 @@
 package com.bootcamp.customers.dto;
 
 import com.bootcamp.customers.entity.Person;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -11,7 +14,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PersonResponseDto{
+	private String message;
 	private Person person;
-	private Message statusDto;
 }

@@ -23,4 +23,5 @@ public interface CompanyService {
 
 	Mono<Message> deleteCompany(String companyId);
 
+	Mono<CompanyResponseDto> requestProfilePyme(CompanyRequestDto companyRequestDto);
 }

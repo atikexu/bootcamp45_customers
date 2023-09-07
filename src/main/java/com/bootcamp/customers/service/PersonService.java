@@ -2,6 +2,7 @@ package com.bootcamp.customers.service;
 
 import com.bootcamp.customers.dto.Message;
 import com.bootcamp.customers.dto.PersonRequestDto;
+import com.bootcamp.customers.dto.PersonResponseDto;
 import com.bootcamp.customers.entity.Person;
 
 import reactor.core.publisher.Flux;
@@ -21,5 +22,7 @@ public interface PersonService {
 	Mono<Person> updatePerson(PersonRequestDto personRequestDto);
 
 	Mono<Message> deletePerson(String personId);
+	
+	Mono<PersonResponseDto> requestProfileVip(PersonRequestDto personRequestDto);
 
 }

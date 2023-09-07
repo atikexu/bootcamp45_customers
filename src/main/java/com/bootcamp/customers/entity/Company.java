@@ -26,4 +26,5 @@ public class Company {
 	private List<AuthorizedDto> headlines;
 	private List<AuthorizedDto> signatories;
 	private String typeCustomer;
+	private String typeProfile;
 }

@@ -3,6 +3,8 @@ package com.bootcamp.customers.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bootcamp.customers.clients.AccountsRestClient;
+import com.bootcamp.customers.clients.CreditsRestClient;
 import com.bootcamp.customers.dto.CompanyRequestDto;
 import com.bootcamp.customers.dto.CompanyResponseDto;
 import com.bootcamp.customers.dto.Message;
@@ -18,6 +20,12 @@ import reactor.core.publisher.Mono;
  */
 @Service
 public class CompanyServiceImpl implements CompanyService{
+	
+	@Autowired
+	AccountsRestClient accountsRestClient;
+	
+	@Autowired
+	CreditsRestClient creditsRestClient;
 
 	@Autowired
     private CompanyRepository companyRepository;
@@ -49,19 +57,15 @@ public class CompanyServiceImpl implements CompanyService{
 	@Override
 	public Mono<CompanyResponseDto> createCompany(CompanyRequestDto companyRequestDto) {
 		Company company = new Company(null, companyRequestDto.getBusinessName(), companyRequestDto.getRuc(), companyRequestDto.getEmail()
-				, companyRequestDto.getTelephone() , companyRequestDto.getHeadlines(), companyRequestDto.getSignatories(),"COMPANY");
+				, companyRequestDto.getTelephone() , companyRequestDto.getHeadlines(), companyRequestDto.getSignatories(),"COMPANY", "BUSINESS");
 		CompanyResponseDto companyResponseDto = new CompanyResponseDto();
 		companyResponseDto.setCompany(company);
 		companyResponseDto.setMessage("Business client created successfully");
 		return validateCompanyRequest(companyResponseDto)
-	            .flatMap(validate -> {
-	            	if (validate.getCompany() == null) {
-		                return Mono.just(validate);
-		            } else {
-		            	return companyRepository.save(validate.getCompany())
-		                		.map(saveCompany -> new CompanyResponseDto(validate.getMessage(), saveCompany));
-		            }
-	            });
+        		.flatMap(validate -> validate.getCompany() == null
+        		? Mono.just(validate)
+                : companyRepository.save(validate.getCompany())
+                    .map(savedCompany -> new CompanyResponseDto(validate.getMessage(), savedCompany)));
 	}
 
 	/**
@@ -85,15 +89,10 @@ public class CompanyServiceImpl implements CompanyService{
 	                companyResponseDto.setCompany(uCompany);
 	                companyResponseDto.setMessage("business type client upgraded successfully");
 	                return validateCompanyRequest(companyResponseDto)
-	                        .flatMap(validate -> {
-	                            if (validate.getCompany() == null) {
-	                            	return Mono.just(validate);
-	                            } else {
-	                                return companyRepository.save(validate.getCompany())
-	                                        .map(savedCompany -> new CompanyResponseDto(validate.getMessage(), savedCompany));
-	                            }
-	                        });
-	                        
+	                		.flatMap(validate -> validate.getCompany() == null
+	                		? Mono.just(validate)
+	                        : companyRepository.save(validate.getCompany())
+	                            .map(savedCompany -> new CompanyResponseDto(validate.getMessage(), savedCompany)));
 	            })
 	            .switchIfEmpty(Mono.just(new CompanyResponseDto("Business client does not exist", null)));
 	}
@@ -117,7 +116,23 @@ public class CompanyServiceImpl implements CompanyService{
         return Mono.just(companyRequestDto)
             .filter(dto -> dto.getCompany().getHeadlines() != null && !dto.getCompany().getHeadlines().isEmpty())
             .filter(dto -> dto.getCompany().getSignatories() == null || dto.getCompany().getSignatories().size() <= 4)
-            .switchIfEmpty(Mono.just(new CompanyResponseDto("Must have 1 or more holders, must have a maximum of 4 signatories",null)));
+            .switchIfEmpty(Mono.just(new CompanyResponseDto("headlines: Must have 1 or more holders, signatories: must have a maximum of 4 signatories",null)));
     }
+	
+	@Override
+	public Mono<CompanyResponseDto> requestProfilePyme(CompanyRequestDto companyRequestDto) {
+		return companyRepository.findById(companyRequestDto.getId()).flatMap(uCompany -> {
+			return accountsRestClient.getAllAccountXCustomerId(uCompany.getId())
+					.filter(c -> c.getDescripTypeAccount().equals("C_CORRIENTE")).next()
+					.flatMap(x -> {
+						return creditsRestClient.getAllCreditCardXCustomerId(uCompany.getId()).next().flatMap(b -> {
+							uCompany.setTypeProfile("PYME");
+							return companyRepository.save(uCompany).flatMap(z -> {
+								return Mono.just(new CompanyResponseDto("Successful profile request (PYME)", uCompany));
+							});	
+						}).defaultIfEmpty(new CompanyResponseDto("Customer does not have a credit card", uCompany));
+					}).defaultIfEmpty(new CompanyResponseDto("Client does not have a checking account", uCompany));
+        }).defaultIfEmpty(new CompanyResponseDto("Client does not exist",null));
+	}
 
 }

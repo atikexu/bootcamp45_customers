@@ -1,6 +1,7 @@
 package com.bootcamp.customers.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.customers.dto.Message;
 import com.bootcamp.customers.dto.PersonRequestDto;
+import com.bootcamp.customers.dto.PersonResponseDto;
 import com.bootcamp.customers.entity.Person;
 import com.bootcamp.customers.service.PersonService;
 
@@ -52,7 +54,7 @@ public class PersonController {
 	 * @param personRequestDto
 	 * @return Mono<Person>
 	 */
-	@PostMapping
+	@PostMapping(consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Person> createPerson(@RequestBody PersonRequestDto personRequestDto){
 		return personService.createPerson(personRequestDto);
     }
@@ -62,7 +64,7 @@ public class PersonController {
 	 * @param personRequestDto
 	 * @return Mono<Person>
 	 */
-	@PutMapping
+	@PutMapping(consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Mono<Person> updatePerson(@RequestBody PersonRequestDto personRequestDto){
 		return personService.updatePerson(personRequestDto);
     }
@@ -75,6 +77,16 @@ public class PersonController {
 	@DeleteMapping("/{personId}")
 	public Mono<Message> deletePerson(@PathVariable String personId){
 		return personService.deletePerson(personId);
+    }
+	
+	/**
+	 * Solicitud para cliente VIP
+	 * @param personRequestDto
+	 * @return Mono<Person>
+	 */
+	@PostMapping(value = "/vip", consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<PersonResponseDto> requestProfileVip(@RequestBody PersonRequestDto personRequestDto){
+		return personService.requestProfileVip(personRequestDto);
     }
 	
 }

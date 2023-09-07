@@ -1,6 +1,7 @@
 package com.bootcamp.customers.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/company")
 public class CompanyController {
 	
-	@Autowired
+    @Autowired
     private CompanyService companyService;
 
 	/**
@@ -53,7 +54,7 @@ public class CompanyController {
 	 * @param companyRequestDto
 	 * @return Mono<Company>
 	 */
-	@PostMapping
+	@PostMapping(consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<CompanyResponseDto> createCompany(@RequestBody CompanyRequestDto companyRequestDto){
 		return companyService.createCompany(companyRequestDto);
     }
@@ -63,7 +64,7 @@ public class CompanyController {
 	 * @param companyRequestDto
 	 * @return Mono<Company>
 	 */
-	@PutMapping
+	@PutMapping(consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Mono<CompanyResponseDto> updateCompany(@RequestBody CompanyRequestDto companyRequestDto){
 		return companyService.updateCompany(companyRequestDto);
     }
@@ -71,11 +72,21 @@ public class CompanyController {
 	/**
 	 * Elimina el cliente de tipo empresarial segun el id del cliente
 	 * @param companyId
-	 * @return Mono<Message>
+     * @return Mono<Message>
 	 */
 	@DeleteMapping("/{companyId}")
 	public Mono<Message> deleteCompany(@PathVariable String companyId){
 		return companyService.deleteCompany(companyId);
+    }
+	
+	/**
+	 * Solicitud para cliente PYME
+	 * @param personRequestDto
+	 * @return Mono<Person>
+	 */
+	@PostMapping(value = "/pyme", consumes= MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<CompanyResponseDto> requestProfilePyme(@RequestBody CompanyRequestDto companyRequestDto){
+		return companyService.requestProfilePyme(companyRequestDto);
     }
 	
 }

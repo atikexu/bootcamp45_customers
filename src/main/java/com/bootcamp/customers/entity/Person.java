@@ -21,4 +21,5 @@ public class Person {
 	private String email;
 	private String telephone;
 	private String typeCustomer;
+	private String typeProfile;
 }
